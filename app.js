@@ -17,6 +17,7 @@
   const canvas = document.getElementById("resultCanvas");
   const context = canvas.getContext("2d");
   const downloadButton = document.getElementById("downloadButton");
+  const openImageButton = document.getElementById("openImageButton");
   const message = document.getElementById("message");
   const photoDetails = document.getElementById("photoDetails");
   const emptyPreview = document.getElementById("emptyPreview");
@@ -189,6 +190,7 @@
     emptyPreview.hidden = true;
     photoAdjustments.classList.add("is-visible");
     downloadButton.disabled = false;
+    openImageButton.disabled = false;
     statusPill.textContent = "Preview ready";
     statusPill.classList.add("is-ready");
   }
@@ -211,6 +213,7 @@
     photoAdjustments.classList.remove("is-visible");
     dropzone.style.display = "";
     downloadButton.disabled = true;
+    openImageButton.disabled = true;
     statusPill.textContent = "Waiting for photo";
     statusPill.classList.remove("is-ready");
     setMessage("");
@@ -360,6 +363,34 @@
       link.remove();
       setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
       showCaptions();
+    }, "image/png");
+  });
+
+  openImageButton.addEventListener("click", () => {
+    if (!currentImage) return;
+
+    const imageTab = window.open("about:blank", "_blank");
+    if (!imageTab) {
+      setMessage("Allow pop-ups to open your image in a new tab.");
+      return;
+    }
+
+    imageTab.opener = null;
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        imageTab.close();
+        setMessage("Your image couldn’t be exported. Please try again.");
+        return;
+      }
+
+      const imageUrl = URL.createObjectURL(blob);
+      imageTab.location.href = imageUrl;
+      const cleanupInterval = window.setInterval(() => {
+        if (imageTab.closed) {
+          URL.revokeObjectURL(imageUrl);
+          window.clearInterval(cleanupInterval);
+        }
+      }, 1000);
     }, "image/png");
   });
 
