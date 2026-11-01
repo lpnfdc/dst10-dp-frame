@@ -5,6 +5,13 @@
     : new URL("./assets/captions.json", document.baseURI);
   const MAX_FILE_SIZE = 15 * 1024 * 1024;
   const allowedTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
+  // Bounds of the transparent photo opening in assets/overlay.png.
+  const photoWindow = {
+    left: 193 / 1440,
+    top: 193 / 1440,
+    right: 1247 / 1440,
+    bottom: 1247 / 1440
+  };
   const photoInput = document.getElementById("photoInput");
   const dropzone = document.getElementById("dropzone");
   const canvas = document.getElementById("resultCanvas");
@@ -58,26 +65,46 @@
     return Math.hypot(second.x - first.x, second.y - first.y);
   }
 
-  function movePhoto(deltaX, deltaY) {
-    if (!currentImage) return;
-
+  function getImageLayout() {
     const size = canvas.width;
     const zoom = Number(zoomInput.value) / 100;
     const scale = Math.max(size / currentImage.naturalWidth, size / currentImage.naturalHeight) * zoom;
-    const overflowX = (currentImage.naturalWidth * scale - size) / 2;
-    const overflowY = (currentImage.naturalHeight * scale - size) / 2;
+    const width = currentImage.naturalWidth * scale;
+    const height = currentImage.naturalHeight * scale;
+    const windowWidth = size * (photoWindow.right - photoWindow.left);
+    const windowHeight = size * (photoWindow.bottom - photoWindow.top);
+    const windowCenterX = size * (photoWindow.left + photoWindow.right) / 2;
+    const windowCenterY = size * (photoWindow.top + photoWindow.bottom) / 2;
+    const travelX = Math.max(0, (width - windowWidth) / 2);
+    const travelY = Math.max(0, (height - windowHeight) / 2);
+
+    return {
+      size,
+      width,
+      height,
+      travelX,
+      travelY,
+      x: windowCenterX - width / 2 + Number(horizontalInput.value) / 100 * travelX,
+      y: windowCenterY - height / 2 + Number(verticalInput.value) / 100 * travelY
+    };
+  }
+
+  function movePhoto(deltaX, deltaY) {
+    if (!currentImage) return;
+
+    const { size, travelX, travelY } = getImageLayout();
     const canvasBounds = canvas.getBoundingClientRect();
     const pixelsPerCanvasUnit = size / canvasBounds.width;
 
-    if (overflowX > 0) {
+    if (travelX > 0) {
       horizontalInput.value = String(Math.max(-100, Math.min(100,
-        Number(horizontalInput.value) + deltaX * pixelsPerCanvasUnit / overflowX * 100)));
+        Number(horizontalInput.value) + deltaX * pixelsPerCanvasUnit / travelX * 100)));
       document.getElementById("horizontalValue").value = `${Math.round(Number(horizontalInput.value))}%`;
     }
 
-    if (overflowY > 0) {
+    if (travelY > 0) {
       verticalInput.value = String(Math.max(-100, Math.min(100,
-        Number(verticalInput.value) + deltaY * pixelsPerCanvasUnit / overflowY * 100)));
+        Number(verticalInput.value) + deltaY * pixelsPerCanvasUnit / travelY * 100)));
       document.getElementById("verticalValue").value = `${Math.round(Number(verticalInput.value))}%`;
     }
 
@@ -149,13 +176,7 @@
   function drawFrame() {
     if (!currentImage || !context) return;
 
-    const size = canvas.width;
-    const zoom = Number(zoomInput.value) / 100;
-    const scale = Math.max(size / currentImage.naturalWidth, size / currentImage.naturalHeight) * zoom;
-    const width = currentImage.naturalWidth * scale;
-    const height = currentImage.naturalHeight * scale;
-    const x = (size - width) / 2 + Number(horizontalInput.value) / 100 * (width - size) / 2;
-    const y = (size - height) / 2 + Number(verticalInput.value) / 100 * (height - size) / 2;
+    const { size, width, height, x, y } = getImageLayout();
 
     context.clearRect(0, 0, size, size);
     context.drawImage(currentImage, x, y, width, height);
