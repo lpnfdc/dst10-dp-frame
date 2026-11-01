@@ -1,4 +1,8 @@
 (() => {
+  const appScriptUrl = document.currentScript && document.currentScript.src;
+  const captionsUrl = appScriptUrl
+    ? new URL("./assets/captions.json", appScriptUrl)
+    : new URL("./assets/captions.json", document.baseURI);
   const MAX_FILE_SIZE = 15 * 1024 * 1024;
   const allowedTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
   const photoInput = document.getElementById("photoInput");
@@ -251,9 +255,9 @@
     captionText.value = "Loading caption…";
 
     try {
-      const response = await fetch("assets/captions.json", { cache: "no-cache" });
+      const response = await fetch(captionsUrl, { cache: "no-cache" });
       if (!response.ok) {
-        throw new Error(`Caption file request failed with status ${response.status}.`);
+        throw new Error(`Caption file request failed with status ${response.status} at ${response.url}.`);
       }
 
       const data = await response.json();
@@ -266,7 +270,8 @@
       copyCaptionButton.disabled = false;
     } catch (error) {
       console.error("Could not load the event captions.", error);
-      captionText.value = "The caption couldn’t be loaded. Please try again or reload the page.";
+      captionText.value = "The caption couldn’t be loaded. Check that the assets folder and captions.json are included in your GitHub Pages deployment, then try again.";
+      copyCaptionButton.disabled = true;
     }
   }
 
