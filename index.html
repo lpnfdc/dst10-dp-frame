@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#100719">
+    <meta name="description" content="Create your Dance Series Track 10: Dance the Night Away profile picture. Add your photo, adjust it, and download your event frame.">
+    <title>Dance the Night Away — Dance Series Track 10</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header class="shell topbar">
+      <div class="organizer">
+        <img class="organizer-logo" src="assets/PNF LOGO WHITE TRANSPARENT.png" alt="Lasallian Pointes N' Flexes Dance Company logo">
+        <div class="organizer-name">
+          <strong>Lasallian Pointes N' Flexes Dance Company</strong>
+          <span>LPNFDC</span>
+        </div>
+      </div>
+      <div class="top-note">Dance Series <span aria-hidden="true">·</span> Track 10</div>
+    </header>
+
+    <main class="shell editor-section">
+        <div class="section-heading">
+          <div class="step-label">Dance Series · Track 10</div>
+          <h1 id="editor-title">DANCE THE NIGHT AWAY</h1>
+          <p>Make your event DP. Add your photo, adjust it, and download. Your image stays on your device.</p>
+        </div>
+
+        <div class="studio" aria-label="Dance Series profile picture editor">
+          <section class="panel upload-panel" aria-labelledby="upload-title">
+            <div class="step-label">01 / Add your photo</div>
+            <h3 id="upload-title">Start with a selfie</h3>
+            <p class="panel-copy">A square photo works best, but any shape is fine. You can adjust the crop after uploading.</p>
+
+            <div class="dropzone" id="dropzone">
+              <div class="upload-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0L7 9m5-5 5 5"/><path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg>
+              </div>
+              <p class="drop-title">Drop your photo here</p>
+              <p class="drop-hint">JPG, PNG or WebP · up to 15 MB</p>
+              <input class="file-input" id="photoInput" type="file" accept="image/jpeg,image/png,image/webp">
+              <label class="file-button" for="photoInput">Choose a photo</label>
+            </div>
+
+            <div class="photo-details" id="photoDetails">
+              <div class="file-info">
+                <div class="file-name" id="fileName"></div>
+                <div class="file-size" id="fileSize"></div>
+              </div>
+              <button class="text-button" id="changePhoto" type="button">Change</button>
+              <button class="text-button" id="removePhoto" type="button">Remove</button>
+            </div>
+
+            <div class="hint-row">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 1 1 8 0v3"/></svg>
+              <span>Your photo stays on your device. It’s never uploaded to a server.</span>
+            </div>
+            <p class="message" id="message" role="status" aria-live="polite"></p>
+          </section>
+
+          <section class="panel preview-panel" aria-labelledby="preview-title">
+            <div class="preview-heading">
+              <div>
+                <div class="step-label">02 / Get the look</div>
+                <h3 id="preview-title">Your event DP</h3>
+              </div>
+              <span class="live-pill" id="statusPill">Waiting for photo</span>
+            </div>
+
+            <div class="canvas-wrap">
+              <div class="empty-preview" id="emptyPreview">
+                <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="6" y="6" width="28" height="28" rx="8"/><circle cx="20" cy="17" r="4"/><path d="M11 30c1.7-4.1 4.7-6.2 9-6.2s7.3 2.1 9 6.2"/><path d="M29 9v8m-4-4h8"/></svg>
+                <strong>Your preview goes here</strong>
+                <span>Choose a photo to see the event frame</span>
+              </div>
+              <canvas id="resultCanvas" width="1080" height="1080" role="img" aria-label="Preview of your photo with the Dance Series event frame applied"></canvas>
+            </div>
+            <p class="gesture-hint">Drag to reposition <span aria-hidden="true">·</span> Pinch to zoom on touch screens</p>
+
+            <section class="photo-adjustments" id="photoAdjustments" aria-labelledby="adjustmentsHeading">
+              <div class="adjustment-heading">
+                <h4 class="control-heading" id="adjustmentsHeading">Adjust your photo</h4>
+                <button class="text-button" id="resetAdjustments" type="button">Reset</button>
+              </div>
+              <div class="adjustment-grid">
+                <div class="adjustment-control">
+                  <label class="adjustment-label" for="zoomInput"><span>Zoom</span><output id="zoomValue" for="zoomInput">100%</output></label>
+                  <input id="zoomInput" type="range" min="100" max="300" step="1" value="100">
+                </div>
+                <div class="adjustment-control">
+                  <label class="adjustment-label" for="horizontalInput"><span>Horizontal</span><output id="horizontalValue" for="horizontalInput">0%</output></label>
+                  <input id="horizontalInput" type="range" min="-100" max="100" step="1" value="0">
+                </div>
+                <div class="adjustment-control">
+                  <label class="adjustment-label" for="verticalInput"><span>Vertical</span><output id="verticalValue" for="verticalInput">0%</output></label>
+                  <input id="verticalInput" type="range" min="-100" max="100" step="1" value="0">
+                </div>
+              </div>
+            </section>
+
+            <button class="download-button" id="downloadButton" type="button" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0 5-5m-5 5-5-5"/><path d="M5 17v3h14v-3"/></svg>
+              Download your event DP
+            </button>
+            <p class="download-note">High-quality PNG · 1080 × 1080 px</p>
+            <button class="caption-review-button" id="reviewCaptions" type="button">View caption</button>
+          </section>
+        </div>
+    </main>
+
+    <dialog class="caption-dialog" id="captionDialog" aria-labelledby="captionDialogTitle">
+      <div class="caption-dialog-header">
+        <div>
+          <div class="step-label">Ready to share</div>
+          <h2 id="captionDialogTitle">Your caption</h2>
+        </div>
+        <button class="dialog-close" id="closeCaptions" type="button" aria-label="Close captions">&times;</button>
+      </div>
+      <p class="caption-intro">Copy this caption to share your Dance Series Track 10 photo.</p>
+      <div class="caption-actions">
+        <button class="caption-copy-button" id="copyCaption" type="button" disabled>Copy caption</button>
+        <span class="caption-status" id="captionStatus" role="status" aria-live="polite"></span>
+      </div>
+      <textarea class="caption-text" id="captionText" rows="5" readonly aria-label="Social caption"></textarea>
+    </dialog>
+
+    <footer class="shell">Lasallian Pointes N' Flexes Dance Company <strong>· LPNFDC</strong></footer>
+  </body>
+</html>
