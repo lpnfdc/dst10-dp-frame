@@ -240,6 +240,10 @@ button:focus-visible, input:focus-visible, .file-button:focus-visible {
 .download-button:not(:disabled):hover { transform: translateY(-1px); filter: brightness(1.13); }
 .download-button:disabled { background: #42384c; color: #a79bad; cursor: not-allowed; }
 .download-note { margin: 9px 0 0; color: var(--muted); font-size: 9px; text-align: center; }
+.image-tab-button { display: block; width: 100%; min-height: 44px; margin-top: 12px; border: 1px solid var(--line); border-radius: 10px; background: rgba(255,255,255,.04); color: var(--white); cursor: pointer; font-size: 12px; font-weight: 750; }
+.image-tab-button:not(:disabled):hover { border-color: var(--lavender); background: rgba(255,255,255,.08); }
+.image-tab-button:disabled { color: var(--muted); cursor: not-allowed; }
+.image-tab-note { margin: 7px 0 0; color: var(--muted); font-size: 10px; text-align: center; }
 .caption-review-button { display: block; min-height: 42px; margin: 8px auto 0; padding: 0 12px; border: 0; background: transparent; color: var(--lavender); cursor: pointer; font-size: 12px; font-weight: 750; text-decoration: underline; text-underline-offset: 3px; }
 .caption-review-button:hover { color: var(--white); }
 

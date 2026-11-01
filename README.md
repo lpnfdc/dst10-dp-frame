@@ -12,7 +12,7 @@ A little midnight magic for your next event DP. **Dance the Night Away** is a li
 
 1. **Add your photo** — choose a JPG, PNG, or WebP, or drop it into the upload area.
 2. **Find your framing** — drag to reposition your photo within the event frame’s opening, or adjust zoom and position with the controls. Reset anytime.
-3. **Take it with you** — download the finished event DP as a **1080 × 1080 PNG**.
+3. **Take it with you** — download the finished event DP as a **1080 × 1080 PNG**, or open it in a new tab to press and hold the image to save it on mobile.
 
 Square photos are a natural fit, but photos of any shape can be cropped. Uploads are limited to **15 MB**.
 
@@ -30,7 +30,7 @@ To share the editor with others, publish the project files together on any stati
 
 - **`index.html`** — page structure and accessible editor controls
 - **`styles.css`** — responsive, starry-night styling
-- **`app.js`** — photo loading, crop controls, preview, and PNG export
+- **`app.js`** — photo loading, crop controls, preview, and PNG export/download
 - **`assets/overlay.png`** — the event frame composited over the photo
 - **`assets/`** — event artwork and LPNFDC logos
 
