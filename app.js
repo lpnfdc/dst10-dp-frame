@@ -40,7 +40,9 @@
   let photoLoadId = 0;
   const activePointers = new Map();
   let pinchStartDistance = 0;
+  let pinchStartAngle = 0;
   let pinchStartZoom = 100;
+  let pinchStartRotation = 0;
   let captionsLoaded = false;
 
   function setMessage(text) {
@@ -67,6 +69,11 @@
   function getPointerDistance() {
     const [first, second] = activePointers.values();
     return Math.hypot(second.x - first.x, second.y - first.y);
+  }
+
+  function getPointerAngle() {
+    const [first, second] = activePointers.values();
+    return Math.atan2(second.y - first.y, second.x - first.x) * 180 / Math.PI;
   }
 
   function getImageLayout() {
@@ -135,7 +142,9 @@
       canvas.classList.add("is-dragging");
     } else if (activePointers.size === 2) {
       pinchStartDistance = getPointerDistance();
+      pinchStartAngle = getPointerAngle();
       pinchStartZoom = Number(zoomInput.value);
+      pinchStartRotation = Number(rotateInput.value);
     }
   });
 
@@ -151,15 +160,22 @@
       if (pinchStartDistance === 0) {
         if (currentDistance > 0) {
           pinchStartDistance = currentDistance;
+          pinchStartAngle = getPointerAngle();
           pinchStartZoom = Number(zoomInput.value);
+          pinchStartRotation = Number(rotateInput.value);
         }
         return;
       }
 
       const zoom = Math.max(100, Math.min(300,
         Math.round(pinchStartZoom * currentDistance / pinchStartDistance)));
+      const angleDelta = ((getPointerAngle() - pinchStartAngle + 540) % 360) - 180;
+      const rotation = Math.max(-180, Math.min(180,
+        Math.round(pinchStartRotation + angleDelta)));
       zoomInput.value = String(zoom);
+      rotateInput.value = String(rotation);
       document.getElementById("zoomValue").value = `${zoom}%`;
+      document.getElementById("rotateValue").value = `${rotation}°`;
       drawFrame();
       return;
     }
@@ -174,12 +190,16 @@
 
     if (activePointers.size === 1) {
       pinchStartDistance = 0;
+      pinchStartAngle = 0;
     } else if (activePointers.size === 0) {
       pinchStartDistance = 0;
+      pinchStartAngle = 0;
       canvas.classList.remove("is-dragging");
     } else {
       pinchStartDistance = getPointerDistance();
+      pinchStartAngle = getPointerAngle();
       pinchStartZoom = Number(zoomInput.value);
+      pinchStartRotation = Number(rotateInput.value);
     }
   }
 

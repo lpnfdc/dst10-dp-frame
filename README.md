@@ -11,7 +11,7 @@ A little midnight magic for your next event DP. **Dance the Night Away** is a li
 ## ✧ The experience
 
 1. **Add your photo** — choose a JPG, PNG, or WebP, or drop it into the upload area.
-2. **Find your framing** — drag to reposition, pinch to zoom on touch screens, or use the controls to rotate, zoom, and position your photo within the event frame’s opening. Reset anytime.
+2. **Find your framing** — drag to reposition, pinch to zoom and rotate on touch screens, or use the controls to adjust your photo within the event frame’s opening. Reset anytime.
 3. **Take it with you** — download the finished event DP as a **1080 × 1080 PNG**, or open it in a new tab to press and hold the image to save it on mobile.
 
 Square photos are a natural fit, but photos of any shape can be cropped. Uploads are limited to **15 MB**.
