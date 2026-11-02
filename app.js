@@ -23,6 +23,7 @@
   const emptyPreview = document.getElementById("emptyPreview");
   const statusPill = document.getElementById("statusPill");
   const photoAdjustments = document.getElementById("photoAdjustments");
+  const rotateInput = document.getElementById("rotateInput");
   const zoomInput = document.getElementById("zoomInput");
   const horizontalInput = document.getElementById("horizontalInput");
   const verticalInput = document.getElementById("verticalInput");
@@ -53,9 +54,11 @@
   }
 
   function resetAdjustmentValues() {
+    rotateInput.value = "0";
     zoomInput.value = "100";
     horizontalInput.value = "0";
     verticalInput.value = "0";
+    document.getElementById("rotateValue").value = "0°";
     document.getElementById("zoomValue").value = "100%";
     document.getElementById("horizontalValue").value = "0%";
     document.getElementById("verticalValue").value = "0%";
@@ -68,16 +71,25 @@
 
   function getImageLayout() {
     const size = canvas.width;
-    const zoom = Number(zoomInput.value) / 100;
-    const scale = Math.max(size / currentImage.naturalWidth, size / currentImage.naturalHeight) * zoom;
-    const width = currentImage.naturalWidth * scale;
-    const height = currentImage.naturalHeight * scale;
+    const rotation = Number(rotateInput.value) * Math.PI / 180;
+    const absoluteCos = Math.abs(Math.cos(rotation));
+    const absoluteSin = Math.abs(Math.sin(rotation));
     const windowWidth = size * (photoWindow.right - photoWindow.left);
     const windowHeight = size * (photoWindow.bottom - photoWindow.top);
+    const scale = Math.max(
+      size / currentImage.naturalWidth,
+      size / currentImage.naturalHeight,
+      (absoluteCos * windowWidth + absoluteSin * windowHeight) / currentImage.naturalWidth,
+      (absoluteSin * windowWidth + absoluteCos * windowHeight) / currentImage.naturalHeight
+    ) * Number(zoomInput.value) / 100;
+    const width = currentImage.naturalWidth * scale;
+    const height = currentImage.naturalHeight * scale;
+    const rotatedWidth = absoluteCos * width + absoluteSin * height;
+    const rotatedHeight = absoluteSin * width + absoluteCos * height;
     const windowCenterX = size * (photoWindow.left + photoWindow.right) / 2;
     const windowCenterY = size * (photoWindow.top + photoWindow.bottom) / 2;
-    const travelX = Math.max(0, (width - windowWidth) / 2);
-    const travelY = Math.max(0, (height - windowHeight) / 2);
+    const travelX = Math.max(0, (rotatedWidth - windowWidth) / 2);
+    const travelY = Math.max(0, (rotatedHeight - windowHeight) / 2);
 
     return {
       size,
@@ -85,8 +97,9 @@
       height,
       travelX,
       travelY,
-      x: windowCenterX - width / 2 + Number(horizontalInput.value) / 100 * travelX,
-      y: windowCenterY - height / 2 + Number(verticalInput.value) / 100 * travelY
+      centerX: windowCenterX + Number(horizontalInput.value) / 100 * travelX,
+      centerY: windowCenterY + Number(verticalInput.value) / 100 * travelY,
+      rotation
     };
   }
 
@@ -177,10 +190,14 @@
   function drawFrame() {
     if (!currentImage || !context) return;
 
-    const { size, width, height, x, y } = getImageLayout();
+    const { size, width, height, centerX, centerY, rotation } = getImageLayout();
 
     context.clearRect(0, 0, size, size);
-    context.drawImage(currentImage, x, y, width, height);
+    context.save();
+    context.translate(centerX, centerY);
+    context.rotate(rotation);
+    context.drawImage(currentImage, -width / 2, -height / 2, width, height);
+    context.restore();
 
     if (currentOverlay) {
       context.drawImage(currentOverlay, 0, 0, size, size);
@@ -320,6 +337,10 @@
     drawFrame();
   });
 
+  rotateInput.addEventListener("input", () => {
+    document.getElementById("rotateValue").value = `${rotateInput.value}°`;
+    drawFrame();
+  });
   zoomInput.addEventListener("input", () => {
     document.getElementById("zoomValue").value = `${zoomInput.value}%`;
     drawFrame();

@@ -214,7 +214,7 @@ button:focus-visible, input:focus-visible, .file-button:focus-visible {
 .photo-adjustments.is-visible { display: block; }
 .adjustment-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 11px; }
 .adjustment-heading .control-heading { margin: 0; }
-.adjustment-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.adjustment-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 .adjustment-control { min-width: 0; }
 .adjustment-label { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 6px; color: var(--white); font-size: 10px; font-weight: 700; }
 .adjustment-label output { color: var(--muted); font-variant-numeric: tabular-nums; }
